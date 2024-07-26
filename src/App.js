@@ -4,6 +4,7 @@ import RecordingDetail from './components/RecordingDetail';
 import AnalysisDashboard from './components/AnalysisDashboard';
 import ProfileScreen from './components/ProfileScreen';
 import SettingsScreen from './components/SettingsScreen';
+import AIAssistantScreen from './components/AIAssistantScreen';
 
 const WeusreckApp = () => {
   const [selectedRecording, setSelectedRecording] = useState(null);
@@ -119,6 +120,8 @@ const WeusreckApp = () => {
         return <ProfileScreen />;
       case 'settings':
         return <SettingsScreen />;
+      case 'ai-assistant':
+        return <AIAssistantScreen />;
       default:
         return <div>Screen nicht gefunden</div>;
     }
