@@ -1,10 +1,65 @@
-# Getting Started with Create React App
+# Weusreck App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Weusreck is a React application for recording, transcribing, and analyzing audio recordings with AI assistance. The app provides an intuitive user interface for managing recordings, transcriptions, and AI-powered analyses.
 
+## Features
+
+- **Recording Management**: Overview and detailed view of audio recordings
+- **Transcription**: Automatic conversion of speech to text
+- **AI Analysis**: Detection of main topics, sentiment, and action points
+- **Chat Interface**: Interaction with an AI assistant
+- **Analysis Dashboard**: Visualization of statistics and trends
+- **Speech Recognition**: Support for voice input
+
+## Screenshots
+
+In the `/screenshots` directory, you can find screenshots of the application:
+
+### Recordings Overview
+![Recordings Overview](screenshots/screen1.png)
+
+### Recording Details with Player
+![Recording Details](screenshots/screen2.png)
+
+### Chat Interface
+![Chat Interface](screenshots/screen3.png)
+
+### Analysis Dashboard
+![Analysis Dashboard](screenshots/screen4.png)
+
+### Menu Navigation
+![Menu Navigation](screenshots/screen5.png)
+
+### Additional Screenshots
+![Screenshot 6](screenshots/screen6.png)
+![Screenshot 7](screenshots/screen7.png)
+
+## Technology Stack
+
+- React 18.3.1
+- Tailwind CSS for styling
+- Lucide React for icons
+- Recharts for data visualization
+- Web Speech API for speech recognition
+
+## Installation
+
+Make sure Node.js and npm are installed on your system:
+
+```bash
 node --version
 npm --version
+```
+
+Install the dependencies:
+
+```bash
 npm install
+```
+
+## Getting Started with Create React App
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
