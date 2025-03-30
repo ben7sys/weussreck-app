@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
-import { Menu, Mic, ChevronRight, ChevronLeft, Play, Rewind, FastForward, X, User, Settings, BarChart2, MessageSquare } from 'lucide-react';
+import { Menu, ChevronRight, X, User, Settings, BarChart2, MessageSquare } from 'lucide-react';
 import RecordingDetail from './components/RecordingDetail';
 import AnalysisDashboard from './components/AnalysisDashboard';
 import ProfileScreen from './components/ProfileScreen';
 import SettingsScreen from './components/SettingsScreen';
+import ChatScreen from './components/ChatScreen';
 import AIAssistantScreen from './components/AIAssistantScreen';
 
 const WeusreckApp = () => {
   const [selectedRecording, setSelectedRecording] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentScreen, setCurrentScreen] = useState('recordings');
+  const [inputText, setInputText] = useState('');
+  const [isRecording, setIsRecording] = useState(false);
+  const [messages, setMessages] = useState([
+    { id: 1, text: "Hallo! Ich bin dein Weusreck KI-Assistent. Wie kann ich dir heute helfen?", sender: 'ai' }
+  ]);
 
   const recordings = [
     { id: 1, title: "Meeting Notizen", date: "11.07.2024", time: "15:30", duration: "45:22" },
@@ -28,6 +34,66 @@ const WeusreckApp = () => {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleSend = () => {
+    if (inputText.trim() !== '') {
+      setMessages([...messages, { id: messages.length + 1, text: inputText, sender: 'user' }]);
+      setInputText('');
+      // Hier würde die Logik für die KI-Antwort implementiert werden
+      setTimeout(() => {
+        setMessages(prevMessages => [...prevMessages, { 
+          id: prevMessages.length + 1, 
+          text: "Ich verarbeite deine Anfrage. Einen Moment bitte...", 
+          sender: 'ai' 
+        }]);
+      }, 1000);
+    }
+  };
+
+  const handleRecord = () => {
+    if (!isRecording) {
+      startRecording();
+    } else {
+      stopRecording();
+    }
+    setIsRecording(!isRecording);
+  };
+
+  const startRecording = () => {
+    if ('webkitSpeechRecognition' in window) {
+      const recognition = new window.webkitSpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'de-DE';
+
+      recognition.onstart = () => {
+        console.log('Spracherkennung gestartet');
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        console.log('Erkanntes Transkript:', transcript);
+        setInputText(transcript);
+      };
+
+      recognition.onerror = (event) => {
+        console.error('Fehler bei der Spracherkennung:', event.error);
+      };
+
+      recognition.onend = () => {
+        console.log('Spracherkennung beendet');
+        setIsRecording(false);
+      };
+
+      recognition.start();
+    } else {
+      console.error('Web Speech API wird nicht unterstützt.');
+    }
+  };
+
+  const stopRecording = () => {
+    // Logik zum Stoppen der Aufnahme, falls erforderlich
   };
 
   const SideMenu = () => (
@@ -67,6 +133,12 @@ const WeusreckApp = () => {
             <button onClick={() => { setCurrentScreen('ai-assistant'); toggleMenu(); }} className="w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">
               <MessageSquare size={18} className="inline-block mr-2" />
               KI-Assistent
+            </button>
+          </li>
+          <li>
+            <button onClick={() => { setCurrentScreen('chat'); toggleMenu(); }} className="w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">
+              <MessageSquare size={18} className="inline-block mr-2" />
+              Chat
             </button>
           </li>
         </ul>
@@ -115,13 +187,20 @@ const WeusreckApp = () => {
         );
       case 'analysis':
         return <AnalysisDashboard />;
-      // Weitere Cases für andere Screens können hier hinzugefügt werden
       case 'profile':
         return <ProfileScreen />;
       case 'settings':
         return <SettingsScreen />;
       case 'ai-assistant':
         return <AIAssistantScreen />;
+      case 'chat':
+        return <ChatScreen 
+                 inputText={inputText} 
+                 setInputText={setInputText} 
+                 handleSend={handleSend} 
+                 handleRecord={handleRecord} 
+                 isRecording={isRecording} 
+               />;
       default:
         return <div>Screen nicht gefunden</div>;
     }
@@ -152,22 +231,6 @@ const WeusreckApp = () => {
           <SideMenu />
 
           {renderCurrentScreen()}
-
-          <div className="bg-white p-4 flex items-center justify-between shadow-inner">
-            <button className="bg-blue-500 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg">
-              <Mic size={24} />
-            </button>
-            <div className="flex-1 mx-4">
-              <input
-                type="text"
-                placeholder="Nachricht eingeben..."
-                className="w-full bg-gray-100 rounded-full py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
-            </div>
-            <button className="bg-blue-500 text-white rounded-full p-3 shadow">
-              <ChevronRight size={24} />
-            </button>
-          </div>
         </>
       )}
     </div>
